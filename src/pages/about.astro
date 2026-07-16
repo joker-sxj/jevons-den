@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+
+const milestones = [
+  { year: '2024', name: '校级优秀毕业设计', note: '一切的起点，第一次把作品做完' },
+  { year: '2025', name: '省级创新创业大赛 · 一等奖', note: '带着团队第一次站上省级领奖台' },
+  { year: '2026', name: 'vibe-guard 开源发布', note: '给所有 vibe coding 的团队装一个守夜人' },
+];
+---
+<Base title="关于 · Jevon's Den" active="">
+<section class="relative overflow-hidden">
+  <div class="blob w-[460px] h-[360px] -top-24 left-[10%]" style="background:rgba(200,162,115,.1)" aria-hidden="true"></div>
+
+  <div class="max-w-[680px] mx-auto px-7 pt-10 pb-24 relative">
+    <h1 class="serif text-[32px] font-medium text-[#eceae5] tracking-[.06em]">关于</h1>
+
+    <div class="prose-den mt-10">
+      <p>你好，我是 Jevon。</p>
+      <p>白天带一支六个人的开发团队，晚上在这里写字、听歌、看电影。相信工具应该替人守规矩，而人应该把时间花在值得的事上——最近在做的 <a href="https://github.com/joker-sxj/vibe-guard" target="_blank" rel="noopener">vibe-guard</a> 就是这个信念的产物。</p>
+      <p>这间书房收留我的随笔、代码、唱片，和深夜看完的电影。没有更新频率承诺，没有 KPI，灯亮着，随时来。</p>
+    </div>
+
+    <div class="mt-16">
+      <div class="flex items-baseline gap-4 mb-8">
+        <span class="serif text-[19px] tracking-[.1em] text-[#eceae5]">获奖</span>
+        <span class="mono text-[11px] tracking-[.22em] uppercase text-[#55535e]">Honors</span>
+        <span class="flex-1 h-px" style="background:linear-gradient(90deg,#2a2a32,transparent)"></span>
+      </div>
+      <div class="space-y-4">
+        {milestones.map(m => (
+          <div class="glass lift px-6 py-4 flex items-baseline gap-5">
+            <span class="mono text-[13px] text-[#c8a273] flex-shrink-0">{m.year}</span>
+            <div>
+              <div class="text-[15px] text-[#eceae5]">{m.name}</div>
+              <div class="text-[13px] text-[#807e88] mt-0.5">{m.note}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="mt-16">
+      <div class="flex items-baseline gap-4 mb-8">
+        <span class="serif text-[19px] tracking-[.1em] text-[#eceae5]">找到我</span>
+        <span class="mono text-[11px] tracking-[.22em] uppercase text-[#55535e]">Contact</span>
+        <span class="flex-1 h-px" style="background:linear-gradient(90deg,#2a2a32,transparent)"></span>
+      </div>
+      <div class="flex flex-wrap gap-4">
+        <a href="https://github.com/joker-sxj" target="_blank" rel="noopener" class="glass !rounded-2xl px-6 py-3 text-[14px] text-[#c9c7c1] no-underline">GitHub</a>
+        <a href="/articles" class="glass !rounded-2xl px-6 py-3 text-[14px] text-[#c9c7c1] no-underline">掘金 / CSDN</a>
+        <a href="/links" class="glass !rounded-2xl px-6 py-3 text-[14px] text-[#c9c7c1] no-underline">友邻们</a>
+      </div>
+    </div>
+  </div>
+</section>
+</Base>

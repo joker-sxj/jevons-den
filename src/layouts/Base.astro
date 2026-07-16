@@ -1,0 +1,61 @@
+---
+interface Props {
+  title?: string;
+  active?: string;
+}
+const { title = "Jevon's Den · 深夜书房", active = '' } = Astro.props;
+const nav = [
+  { href: '/', label: '书房', key: 'home' },
+  { href: '/posts', label: '随笔', key: 'posts' },
+  { href: '/articles', label: '文章', key: 'articles' },
+  { href: '/dev', label: '开发', key: 'dev' },
+  { href: '/media', label: '收藏', key: 'media' },
+  { href: '/links', label: '友邻', key: 'links' },
+];
+---
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content="Jevon 的深夜书房——随笔、代码、唱片，和深夜看完的电影。" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+</head>
+<body class="antialiased">
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="max-w-[1120px] mx-auto px-7 flex items-center justify-between py-9 relative z-10">
+    <a href="/" class="flex items-center gap-3.5 no-underline">
+      <div class="serif w-10 h-10 rounded-xl border border-[#8a6f4e] text-[#c8a273] flex items-center justify-center text-lg">灯</div>
+      <div class="flex flex-col leading-tight">
+        <span class="mono text-[13px] tracking-[.16em] text-[#eceae5]">JEVON&#8217;S DEN</span>
+        <span class="serif text-[11px] tracking-[.34em] text-[#807e88]">深夜书房</span>
+      </div>
+    </a>
+    <nav class="flex gap-6 text-sm" aria-label="主导航">
+      {nav.map(n => (
+        <a
+          href={n.href}
+          class={active === n.key
+            ? 'text-[#eceae5]'
+            : 'text-[#807e88] hover:text-[#c8a273] transition-colors'}
+        >{n.label}</a>
+      ))}
+    </nav>
+  </header>
+
+  <slot />
+
+  <footer class="border-t border-[#232329] relative z-10">
+    <div class="max-w-[1120px] mx-auto px-7 py-9 flex flex-col md:flex-row justify-between items-center gap-3 text-[12.5px] text-[#55535e]">
+      <div class="serif tracking-[.12em]">灯亮着，随时来。</div>
+      <div class="mono">© 2026 Jevon · <a class="text-[#807e88] hover:text-[#c8a273] transition-colors" href="/rss.xml">RSS</a> · <a class="text-[#807e88] hover:text-[#c8a273] transition-colors" href="/links">友邻</a></div>
+    </div>
+  </footer>
+</body>
+</html>
+
+<style is:global>
+  @import '../styles/global.css';
+</style>

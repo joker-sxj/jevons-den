@@ -1,0 +1,255 @@
+---
+// 写作间：暗门页面，导航不放入口。
+// 鉴权：GitHub OAuth（登录后仅仓库写权限者能发布）。未配置 OAuth 时显示引导。
+// 构建为纯静态页 + 客户端逻辑；OAuth 回调由 /api/auth 处理（Vercel 部署时生效）。
+---
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>写作间 · Jevon's Den</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+</head>
+<body class="antialiased h-screen flex flex-col overflow-hidden">
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- 顶栏 -->
+  <div class="flex items-center justify-between px-8 py-4 border-b border-[#232329] flex-shrink-0 relative z-10">
+    <a href="/" class="mono text-[12px] text-[#807e88] hover:text-[#c8a273] no-underline transition-colors">← 回到书房</a>
+    <span class="serif text-[14px] tracking-[.3em] text-[#807e88]">写 作 间</span>
+    <div id="who" class="flex items-center gap-2.5 text-[12px] text-[#807e88] mono">
+      <button id="loginBtn" class="glass !rounded-xl px-4 py-1.5 text-[12px] text-[#c9c7c1]">用 GitHub 登录</button>
+    </div>
+  </div>
+
+  <!-- 编辑区 -->
+  <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 min-h-0 max-w-[1400px] w-full mx-auto relative z-10">
+    <div class="flex flex-col px-10 py-9 overflow-y-auto lg:border-r border-[#232329]">
+      <input id="title" placeholder="标题"
+        class="serif bg-transparent border-none outline-none text-[28px] text-[#eceae5] w-full mb-3 placeholder:text-[#4a4a52]" />
+      <div class="flex gap-3 items-center mb-7">
+        <input id="tags" placeholder="标签（逗号分隔）"
+          class="mono bg-transparent border-none outline-none text-[12px] text-[#807e88] w-full placeholder:text-[#4a4a52]" />
+      </div>
+      <textarea id="body" placeholder="从这里开始写……（支持 Markdown）"
+        class="flex-1 bg-transparent border-none outline-none resize-none text-[15.5px] leading-[1.9] text-[#c9c7c1] w-full placeholder:text-[#4a4a52] font-[inherit]"></textarea>
+    </div>
+
+    <div class="hidden lg:block px-10 py-9 overflow-y-auto">
+      <div class="mono text-[10px] tracking-[.24em] uppercase text-[#55535e] mb-8">Preview</div>
+      <h1 id="pvTitle" class="serif text-[28px] font-medium text-[#eceae5] mb-7 leading-normal"></h1>
+      <div id="pvBody" class="prose-den"></div>
+    </div>
+  </div>
+
+  <!-- 底栏 -->
+  <div class="flex items-center justify-between px-8 py-4 border-t border-[#232329] flex-shrink-0 relative z-10">
+    <div class="mono flex gap-5 text-[12px] text-[#807e88]">
+      <span id="draftState"><span style="color:var(--sage)">●</span> 草稿在本机</span>
+      <span id="wordCount">0 字</span>
+    </div>
+    <div class="flex gap-3">
+      <button id="clearBtn" class="glass !rounded-xl px-5 py-2 text-[13px] text-[#807e88]">清空</button>
+      <button id="publishBtn" disabled
+        class="rounded-xl px-6 py-2 text-[13px] font-medium text-[#1a1610] disabled:opacity-40 transition-all"
+        style="background:var(--gold)">发布</button>
+    </div>
+  </div>
+
+  <!-- 消息条 -->
+  <div id="toast" class="hidden fixed bottom-20 left-1/2 -translate-x-1/2 glass !rounded-xl px-6 py-3 text-[13px] text-[#c9c7c1] z-50"></div>
+
+<script>
+  // ── 配置：部署后填 OAuth Client ID 与仓库 ──
+  const CONFIG = {
+    owner: 'joker-sxj',
+    repo: 'jevons-den',
+    branch: 'main',
+    clientId: '',            // GitHub OAuth App Client ID（部署后填）
+    authProxy: '/api/auth',  // 换 token 的服务端函数
+  };
+
+  const $ = (id: string) => document.getElementById(id)!;
+  const titleEl = $('title') as HTMLInputElement;
+  const tagsEl = $('tags') as HTMLInputElement;
+  const bodyEl = $('body') as HTMLTextAreaElement;
+  const toast = $('toast');
+
+  // ── 草稿：本地自动保存 ──
+  const DRAFT_KEY = 'den-draft';
+  try {
+    const saved = JSON.parse(localStorage.getItem(DRAFT_KEY) || '{}');
+    if (saved.title) titleEl.value = saved.title;
+    if (saved.tags) tagsEl.value = saved.tags;
+    if (saved.body) bodyEl.value = saved.body;
+  } catch {}
+
+  let saveTimer: ReturnType<typeof setTimeout>;
+  function persist() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({
+        title: titleEl.value, tags: tagsEl.value, body: bodyEl.value,
+      }));
+    }, 400);
+  }
+
+  // ── 极简 Markdown 预览（标题/引用/粗体/斜体/代码/链接/段落）──
+  function esc(s: string) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function mdInline(s: string) {
+    return s
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" rel="noopener">$1</a>');
+  }
+  function mdRender(src: string) {
+    const lines = esc(src).split('\n');
+    let html = '', inCode = false, para: string[] = [];
+    const flush = () => {
+      if (para.length) { html += `<p>${mdInline(para.join('<br>'))}</p>`; para = []; }
+    };
+    for (const line of lines) {
+      if (line.startsWith('```')) { flush(); html += inCode ? '</code></pre>' : '<pre><code>'; inCode = !inCode; continue; }
+      if (inCode) { html += line + '\n'; continue; }
+      const h = line.match(/^(#{1,3})\s+(.*)/);
+      if (h) { flush(); html += `<h${h[1].length + 1}>${mdInline(h[2])}</h${h[1].length + 1}>`; continue; }
+      if (line.startsWith('> ')) { flush(); html += `<blockquote>${mdInline(line.slice(2))}</blockquote>`; continue; }
+      if (line.trim() === '') { flush(); continue; }
+      para.push(line);
+    }
+    flush();
+    if (inCode) html += '</code></pre>';
+    return html;
+  }
+
+  function refresh() {
+    $('pvTitle').textContent = titleEl.value;
+    $('pvBody').innerHTML = mdRender(bodyEl.value);
+    $('wordCount').textContent = bodyEl.value.replace(/\s/g, '').length + ' 字';
+    persist();
+  }
+  [titleEl, tagsEl, bodyEl].forEach(el => el.addEventListener('input', refresh));
+  refresh();
+
+  // ── 提示条 ──
+  let toastTimer: ReturnType<typeof setTimeout>;
+  function say(msg: string, sticky = false) {
+    toast.textContent = msg;
+    toast.classList.remove('hidden');
+    clearTimeout(toastTimer);
+    if (!sticky) toastTimer = setTimeout(() => toast.classList.add('hidden'), 4000);
+  }
+
+  // ── GitHub OAuth ──
+  const TOKEN_KEY = 'den-token';
+  let token = sessionStorage.getItem(TOKEN_KEY) || '';
+
+  async function whoami() {
+    if (!token) return null;
+    const r = await fetch('https://api.github.com/user', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!r.ok) { token = ''; sessionStorage.removeItem(TOKEN_KEY); return null; }
+    return r.json();
+  }
+
+  async function initAuth() {
+    // OAuth 回调：?code=xxx → 交给服务端换 token
+    const code = new URLSearchParams(location.search).get('code');
+    if (code) {
+      history.replaceState(null, '', '/write');
+      try {
+        const r = await fetch(`${CONFIG.authProxy}?code=${encodeURIComponent(code)}`);
+        const data = await r.json();
+        if (data.token) { token = data.token; sessionStorage.setItem(TOKEN_KEY, token); }
+        else say('登录失败：' + (data.error || '未知错误'));
+      } catch { say('登录失败：无法连接鉴权服务'); }
+    }
+
+    const user = await whoami();
+    const who = $('who');
+    if (user) {
+      who.innerHTML = `<img src="${user.avatar_url}" class="w-6 h-6 rounded-full" alt=""><span>${user.login}</span>`;
+      ($('publishBtn') as HTMLButtonElement).disabled = false;
+    } else {
+      $('loginBtn')?.addEventListener('click', () => {
+        if (!CONFIG.clientId) { say('尚未配置 OAuth Client ID——部署后按 README 填入即可启用登录', true); return; }
+        const redirect = encodeURIComponent(location.origin + '/write');
+        location.href = `https://github.com/login/oauth/authorize?client_id=${CONFIG.clientId}&scope=repo&redirect_uri=${redirect}`;
+      });
+    }
+  }
+  initAuth();
+
+  // ── 发布：提交 Markdown 到仓库 ──
+  function slugify(t: string) {
+    const d = new Date();
+    const ymd = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+    const ascii = t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
+    return ascii || `post-${ymd}-${Date.now().toString(36).slice(-4)}`;
+  }
+
+  $('publishBtn').addEventListener('click', async () => {
+    if (!token) return;
+    const title = titleEl.value.trim();
+    const body = bodyEl.value.trim();
+    if (!title || !body) { say('标题和正文都不能为空'); return; }
+
+    const tags = tagsEl.value.split(/[,，]/).map(s => s.trim()).filter(Boolean);
+    const d = new Date();
+    const date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const firstPara = body.split('\n').find(l => l.trim() && !l.startsWith('#') && !l.startsWith('>')) || '';
+    const md = `---
+title: ${title}
+date: ${date}
+tags: [${tags.join(', ')}]
+summary: ${firstPara.slice(0, 80)}
+---
+
+${body}
+`;
+    const path = `src/content/posts/${slugify(title)}.md`;
+    const btn = $('publishBtn') as HTMLButtonElement;
+    btn.disabled = true; btn.textContent = '发布中…';
+    try {
+      const r = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`, {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: `feat: 随笔《${title}》`,
+          content: btoa(unescape(encodeURIComponent(md))),
+          branch: CONFIG.branch,
+        }),
+      });
+      if (r.ok) {
+        localStorage.removeItem(DRAFT_KEY);
+        say('已发布，部署完成后即可在随笔页看到（约 1-2 分钟）', true);
+        titleEl.value = ''; tagsEl.value = ''; bodyEl.value = ''; refresh();
+      } else {
+        const err = await r.json().catch(() => ({}));
+        say('发布失败：' + (err.message || r.status));
+      }
+    } catch { say('发布失败：网络错误'); }
+    btn.disabled = false; btn.textContent = '发布';
+  });
+
+  $('clearBtn').addEventListener('click', () => {
+    if (confirm('清空当前草稿？')) {
+      titleEl.value = ''; tagsEl.value = ''; bodyEl.value = '';
+      localStorage.removeItem(DRAFT_KEY);
+      refresh();
+    }
+  });
+</script>
+
+<style is:global>
+  @import '../styles/global.css';
+  html, body { background: var(--bg); }
+</style>
+</body>
+</html>

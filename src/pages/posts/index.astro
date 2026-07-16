@@ -1,0 +1,39 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const fmt = (d: Date) =>
+  `${d.getFullYear()}·${String(d.getMonth() + 1).padStart(2, '0')}·${String(d.getDate()).padStart(2, '0')}`;
+---
+<Base title="随笔 · Jevon's Den" active="posts">
+<section class="relative overflow-hidden min-h-[60vh]">
+  <div class="blob w-[440px] h-[340px] -top-20 right-[-100px]" style="background:rgba(200,162,115,.09)" aria-hidden="true"></div>
+
+  <div class="max-w-[760px] mx-auto px-7 pt-10 pb-24 relative">
+    <div class="mb-14">
+      <h1 class="serif text-[32px] font-medium text-[#eceae5] tracking-[.06em]">随笔</h1>
+      <p class="mt-3 text-[14px] text-[#807e88]">深夜写下的字，多半不谈技术。共 {posts.length} 篇。</p>
+    </div>
+
+    <div class="space-y-2">
+      {posts.map(p => (
+        <a href={`/posts/${p.id}`} class="group block no-underline py-5 border-b border-[#232329]">
+          <div class="flex items-baseline justify-between gap-6">
+            <h2 class="serif text-[19px] font-medium text-[#c9c7c1] group-hover:text-[#c8a273] transition-colors leading-relaxed">{p.data.title}</h2>
+            <span class="mono text-[12px] text-[#55535e] flex-shrink-0">{fmt(p.data.date)}</span>
+          </div>
+          {p.data.summary && <p class="mt-2 text-[13.5px] text-[#807e88] leading-relaxed max-w-[36em]">{p.data.summary}</p>}
+          {p.data.tags.length > 0 && (
+            <div class="mt-3 flex gap-2">
+              {p.data.tags.map(t => <span class="mono text-[11px] text-[#55535e]">#{t}</span>)}
+            </div>
+          )}
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+</Base>
