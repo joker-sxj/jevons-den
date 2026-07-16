@@ -4,69 +4,46 @@ import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('posts', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-const [latest, ...rest] = posts;
-const more = rest.slice(0, 2);
+const latest = posts.slice(0, 2);
 
 const fmt = (d: Date) =>
-  `${d.getFullYear()} · ${String(d.getMonth() + 1).padStart(2, '0')} · ${String(d.getDate()).padStart(2, '0')}`;
-const fmtShort = (d: Date) =>
-  `${String(d.getMonth() + 1).padStart(2, '0')}·${String(d.getDate()).padStart(2, '0')}`;
+  `${d.getFullYear()}·${String(d.getMonth() + 1).padStart(2, '0')}·${String(d.getDate()).padStart(2, '0')}`;
 
-const eras = [
-  { year: '2021–2024', stage: '独自写代码的年代', title: '独自写代码的年代',
-    body: '那几年写代码和所有学生没什么两样：一个人、一台笔记本，从深夜写到天亮。毕业设计拿了校级优秀，算是给这个一个人的时代画上句点。' },
-  { year: '2024–2025', stage: '第一次带团队', title: '第一次带团队',
-    body: '身边多了五个人，代码开始不只属于自己。我们带着作品第一次站上省级领奖台——创新创业大赛一等奖。也是从那时起我开始明白：比写代码更难的，是让六个人相信同一份约定。' },
-  { year: '2025–2026', stage: 'vibe coding 的时代', title: 'vibe coding 的时代',
-    body: '团队里的代码越来越多出自 AI 之手，人退到定方向、守结果的位置。没人做 code review 了，约定却不能没人守——于是把规矩写进仓库，让 CI 当守夜人，这就是 vibe-guard 的由来。' },
-  { year: '今夜', stage: '灯亮着', title: '灯亮着',
-    body: '白天的代码交给机器守规矩，晚上回到这间书房写字、听歌、看电影。你现在看到的每一页，都是这个时代的进行时。' },
-  { year: '20XX?', stage: '未完待续', title: '未完待续',
-    body: '也许有一天，这里会记下更大的奖、更远的路，或者完全出乎意料的转向。来时路写到这里，后面的留给时间。' },
-];
-
-const rooms = [
-  { href: '/posts', seal: '随', name: '随笔', desc: '深夜写下的字，多半不谈技术' },
-  { href: '/articles', seal: '文', name: '文章', desc: '散落在 CSDN、掘金的技术文，收拢在此' },
-  { href: '/dev', seal: '码', name: '开发', desc: '项目、commit 与 token 的燃烧记录' },
-  { href: '/media', seal: '藏', name: '收藏', desc: '唱片、电影与书，深夜的另一半' },
-  { href: '/links', seal: '邻', name: '友邻', desc: '灯火相邻的那些站' },
-  { href: '/about', seal: '我', name: '关于', desc: '这间书房的主人，与他的来时路' },
+// 低调的几个入口，不堆成绩
+const doors = [
+  { href: '/about', k: '关于我', d: '我是谁，一路怎么走过来的' },
+  { href: '/stage', k: '舞台', d: '写代码之外，我还上台演过话剧' },
+  { href: '/dev', k: '折腾过的', d: '一条从大三追到现在的 AI Agent 线' },
+  { href: '/posts', k: '随笔', d: '偶尔写点想法，多半不谈技术' },
+  { href: '/media', k: '收藏', d: '听的歌、看过的电影和书' },
+  { href: '/links', k: '友邻', d: '几个我常去的地方' },
 ];
 ---
 <Base active="home">
 
-<!-- ════════ HERO：灯下 ════════ -->
-<section class="relative overflow-hidden -mt-[100px] pt-[100px]">
-  <div class="blob w-[560px] h-[420px] -top-32 left-[8%]" style="background:rgba(200,162,115,.13)" aria-hidden="true"></div>
-  <div class="blob w-[440px] h-[380px] top-24 right-[-90px]" style="background:rgba(107,86,55,.16); animation-duration:14s,11s" aria-hidden="true"></div>
-  <div class="blob w-[360px] h-[300px] bottom-[-120px] left-[38%]" style="background:rgba(168,184,160,.07); animation-duration:16s,13s" aria-hidden="true"></div>
+<!-- ── 开场：一句大白话 ── -->
+<section class="relative overflow-hidden">
+  <div class="blob w-[540px] h-[420px] -top-28 left-[6%]" style="background:rgba(200,162,115,.12)" aria-hidden="true"></div>
+  <div class="blob w-[420px] h-[360px] top-32 right-[-100px]" style="background:rgba(107,86,55,.14); animation-duration:14s,11s" aria-hidden="true"></div>
 
   <div class="max-w-[1120px] mx-auto px-7 relative">
-    <div class="serif hidden lg:block absolute right-2 top-10 text-[13px] tracking-[.5em] text-[#55535e] select-none" style="writing-mode:vertical-rl" aria-hidden="true">
-      白日代码 <b class="text-[#8a6f4e] font-normal">·</b> 深夜文章
-    </div>
+    <div class="pt-16 pb-20 max-w-[720px]">
+      <div class="fiu mono text-[13px] text-[#c8a273] tracking-[.3em] mb-7" style="animation-delay:.05s">HI, I&#8217;M JEVON</div>
 
-    <div class="pt-14 pb-24 max-w-[760px]">
-      <div class="fiu inline-flex items-center gap-2 glass !rounded-full px-4 py-1.5 text-[12px] text-[#c9c7c1]" style="animation-delay:.05s">
-        <span class="w-1.5 h-1.5 rounded-full" style="background:var(--sage)"></span>
-        灯亮着 · 深夜营业 <span class="mono text-[#55535e]">est. 2026</span>
-      </div>
-
-      <h1 class="serif fiu mt-8 font-medium text-[#eceae5] leading-[1.32] tracking-wide text-[clamp(34px,5.2vw,56px)]" style="animation-delay:.2s">
-        白天让机器<em class="not-italic text-[#c8a273]">守规矩</em>，<br>
-        晚上回这里写点<em class="not-italic text-[#c8a273]">不守规矩</em>的字。
+      <h1 class="fiu font-medium text-[#eceae5] leading-[1.4] text-[clamp(30px,4.6vw,48px)]" style="animation-delay:.2s">
+        嗨，我是 <span class="serif text-[#c8a273]">宋经纬</span>。<br>
+        一个喜欢记录、也演过话剧的<span class="serif">程序员</span>。
       </h1>
 
-      <p class="fiu mt-7 text-[15px] leading-[1.9] text-[#807e88] max-w-[34em]" style="animation-delay:.35s">
-        六人小团队的负责人，AI 协作治理工具 vibe-guard 的作者。
-        这间书房收留我的随笔、代码、唱片，和深夜看完的电影。
+      <p class="fiu mt-8 text-[16px] leading-[1.9] text-[#807e88] max-w-[32em]" style="animation-delay:.35s">
+        从大三到现在，一直在跟 AI Agent 较劲——让机器学会自己思考、自己动手。
+        白天写代码、做产品，晚上写点字、听听歌。这个小站没什么正经，就是想让你认识真实的我。
       </p>
 
       <div class="fiu mt-10 flex flex-wrap items-center gap-4" style="animation-delay:.5s">
-        <a href="/posts" class="rounded-2xl px-7 py-3 text-[15px] font-medium text-[#1a1610] transition-transform hover:-translate-y-1"
-           style="background:var(--gold); box-shadow:0 0 24px rgba(200,162,115,.22)">进来读随笔</a>
-        <a href="/media" class="glass !rounded-2xl px-7 py-3 text-[15px] text-[#c9c7c1]">翻翻收藏</a>
+        <a href="/about" class="rounded-2xl px-7 py-3 text-[15px] font-medium text-[#1a1610] transition-transform hover:-translate-y-1"
+           style="background:var(--gold); box-shadow:0 0 24px rgba(200,162,115,.22)">认识我一下</a>
+        <a href="/stage" class="glass !rounded-2xl px-7 py-3 text-[15px] text-[#c9c7c1]">看我演话剧 →</a>
       </div>
     </div>
   </div>
@@ -76,206 +53,41 @@ const rooms = [
   </svg>
 </section>
 
-<!-- ════════ 笔迹 ════════ -->
+<!-- ── 几扇门 ── -->
 <section class="relative" style="background:var(--bg-band)">
   <div class="max-w-[1120px] mx-auto px-7 py-16">
-    <div class="flex items-baseline gap-4 mb-9">
-      <span class="serif text-[21px] tracking-[.1em] text-[#eceae5]">笔迹</span>
-      <span class="mono text-[11px] tracking-[.22em] uppercase text-[#55535e]">Two Kinds of Ink</span>
-      <span class="flex-1 h-px" style="background:linear-gradient(90deg,#2a2a32,transparent)"></span>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="glass lift p-7">
-        <div class="mono text-[11px] tracking-[.2em] uppercase text-[#55535e] mb-3">今年写下</div>
-        <div class="mono text-[42px] leading-none text-[#c8a273]">{posts.length}<span class="text-[16px] text-[#807e88]"> 篇</span></div>
-        <div class="mt-3 text-[13px] text-[#807e88]">随笔与影评，全部写于日落之后</div>
-      </div>
-      <div class="glass lift p-7">
-        <div class="mono text-[11px] tracking-[.2em] uppercase text-[#55535e] mb-3">写给机器</div>
-        <div class="mono text-[42px] leading-none text-[#eceae5]">1,247<span class="text-[16px] text-[#807e88]"> commits</span></div>
-        <div class="heatgrid mt-4" data-heat aria-hidden="true"></div>
-      </div>
-      <div class="glass lift p-7">
-        <div class="mono text-[11px] tracking-[.2em] uppercase text-[#55535e] mb-3">机器替我写</div>
-        <div class="mono text-[42px] leading-none text-[#eceae5]">312<span class="text-[16px] text-[#c8a273]">M</span><span class="text-[16px] text-[#807e88]"> tokens</span></div>
-        <div class="heatgrid mt-4" data-heat aria-hidden="true"></div>
-      </div>
-    </div>
-    <p class="serif mt-6 text-[13px] text-[#55535e]">中间是我写给机器的，右边是机器替我写的——这个时代的两种笔迹。</p>
-  </div>
-</section>
-
-<!-- ════════ 案头 ════════ -->
-<section id="desk" class="relative overflow-hidden">
-  <div class="blob w-[420px] h-[360px] top-24 right-[-140px]" style="background:rgba(200,162,115,.08); animation-duration:15s,12s" aria-hidden="true"></div>
-
-  <div class="max-w-[1120px] mx-auto px-7 py-20 relative">
-    <div class="flex items-baseline gap-4 mb-10">
-      <span class="serif text-[21px] tracking-[.1em] text-[#eceae5]">案头</span>
-      <span class="mono text-[11px] tracking-[.22em] uppercase text-[#55535e]">On the Desk</span>
-      <span class="flex-1 h-px" style="background:linear-gradient(90deg,#2a2a32,transparent)"></span>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-      {latest && (
-        <a href={`/posts/${latest.id}`} class="glass relative md:col-span-7 p-8 no-underline text-[#c9c7c1] block">
-          <div class="serif absolute right-6 top-2 text-[86px] leading-none text-[#232028] select-none" aria-hidden="true">随</div>
-          <div class="mono text-[11px] tracking-[.2em] uppercase text-[#55535e] mb-4">最新随笔</div>
-          <h3 class="serif text-[24px] font-medium text-[#eceae5] leading-normal mb-3 relative">{latest.data.title}</h3>
-          <div class="mono text-[12px] text-[#55535e] mb-4">{fmt(latest.data.date)}</div>
-          <p class="text-[14.5px] text-[#807e88] max-w-[30em] leading-relaxed">{latest.data.summary}</p>
-          {more.length > 0 && (
-            <div class="mt-7 pt-5 border-t border-[#26262e] space-y-1.5">
-              {more.map(p => (
-                <div class="flex justify-between gap-5 text-[14px] text-[#807e88] hover:text-[#c8a273] transition-colors">
-                  <span>{p.data.title}</span><span class="mono text-[12px] text-[#55535e]">{fmtShort(p.data.date)}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </a>
-      )}
-
-      <div class="md:col-span-5 flex flex-col gap-6 md:mt-12">
-        <a href="/media" class="glass p-6 flex gap-5 items-start no-underline text-[#c9c7c1]">
-          <div class="w-[74px] h-[74px] rounded-xl flex-shrink-0 flex items-center justify-center text-2xl text-white/30 shadow-[0_8px_24px_rgba(0,0,0,.4)]"
-               style="background:conic-gradient(from 220deg,#5c4a66,#33293d,#4a3b52)" aria-hidden="true">♪</div>
-          <div class="min-w-0">
-            <div class="mono text-[11px] tracking-[.2em] uppercase text-[#55535e] mb-2">正在听</div>
-            <h3 class="text-[15px] font-medium text-[#eceae5]">冀西南林路行</h3>
-            <div class="text-[12.5px] text-[#55535e] mb-2.5">万能青年旅店 · 2020</div>
-            <div class="serif quote text-[13px] text-[#807e88] leading-relaxed">泥河冲出山口，大地忽然辽阔</div>
-          </div>
-        </a>
-
-        <a href="/media" class="glass p-6 flex gap-5 items-start no-underline text-[#c9c7c1]">
-          <div class="w-[62px] h-[86px] rounded-xl flex-shrink-0 flex items-center justify-center text-xl text-white/30 shadow-[0_8px_24px_rgba(0,0,0,.4)]"
-               style="background:linear-gradient(160deg,#3b4a56,#222831)" aria-hidden="true">▶</div>
-          <div class="min-w-0">
-            <div class="mono text-[11px] tracking-[.2em] uppercase text-[#55535e] mb-2">最近看</div>
-            <h3 class="text-[15px] font-medium text-[#eceae5]">银翼杀手 2049</h3>
-            <div class="text-[12.5px] text-[#55535e] mb-2.5">Villeneuve · <span class="text-[#c8a273] tracking-[2px] text-[11px]">★★★★★</span></div>
-            <div class="serif quote text-[13px] text-[#807e88] leading-relaxed">所有雨夜霓虹，都欠它一份版权费</div>
-          </div>
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <svg class="block w-full h-[70px]" viewBox="0 0 1440 70" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0,30 C300,64 560,8 820,30 C1080,52 1260,58 1440,36 L1440,70 L0,70 Z" fill="var(--bg-band)"/>
-  </svg>
-</section>
-
-<!-- ════════ 来时路 ════════ -->
-<section class="relative" style="background:var(--bg-band)">
-  <div class="max-w-[1120px] mx-auto px-7 py-16">
-    <div class="flex items-baseline gap-4 mb-12">
-      <span class="serif text-[21px] tracking-[.1em] text-[#eceae5]">来时路</span>
-      <span class="mono text-[11px] tracking-[.22em] uppercase text-[#55535e]">How I Got Here</span>
-      <span class="flex-1 h-px" style="background:linear-gradient(90deg,#2a2a32,transparent)"></span>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
-      <div class="hidden md:block md:col-span-4">
-        <div class="sticky top-24">
-          <div id="tlYear" class="mono text-[38px] leading-tight text-[#c8a273] transition-opacity duration-300">{eras[0].year}</div>
-          <div id="tlStage" class="serif mt-2 text-[15px] text-[#807e88] transition-opacity duration-300">{eras[0].stage}</div>
-          <div class="mt-8 flex gap-1.5" id="tlDots" aria-hidden="true"></div>
-        </div>
-      </div>
-
-      <div class="md:col-span-8 space-y-3" id="tlSteps">
-        {eras.map(e => (
-          <div class="tl-step glass p-7 transition-all duration-300" data-year={e.year} data-stage={e.stage}>
-            <p class="mono text-[11px] tracking-[.2em] text-[#55535e] mb-2 md:hidden">{e.year}</p>
-            <h3 class="text-[17px] font-medium text-[#eceae5] mb-2.5">{e.title}</h3>
-            <p class="serif text-[14.5px] leading-[1.9] text-[#807e88]">{e.body}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ════════ 六个房间 ════════ -->
-<section id="rooms" class="relative overflow-hidden">
-  <div class="blob w-[380px] h-[320px] bottom-[-100px] left-[-120px]" style="background:rgba(107,86,55,.12); animation-duration:13s,10s" aria-hidden="true"></div>
-
-  <div class="max-w-[1120px] mx-auto px-7 py-20 relative">
-    <div class="flex items-baseline gap-4 mb-10">
-      <span class="serif text-[21px] tracking-[.1em] text-[#eceae5]">六个房间</span>
-      <span class="mono text-[11px] tracking-[.22em] uppercase text-[#55535e]">The Rooms</span>
-      <span class="flex-1 h-px" style="background:linear-gradient(90deg,#2a2a32,transparent)"></span>
-    </div>
-
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-5">
-      {rooms.map(r => (
-        <a href={r.href} class="glass p-6 no-underline text-[#c9c7c1]">
-          <div class="serif w-9 h-9 rounded-lg border border-[#8a6f4e] text-[#c8a273] flex items-center justify-center text-[15px] mb-4">{r.seal}</div>
-          <div class="text-[15px] text-[#eceae5] mb-1">{r.name}</div>
-          <div class="text-[12.5px] text-[#807e88]">{r.desc}</div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {doors.map(d => (
+        <a href={d.href} class="glass p-6 no-underline text-[#c9c7c1]">
+          <div class="text-[16px] text-[#eceae5] mb-1.5">{d.k}</div>
+          <div class="text-[13px] text-[#807e88] leading-relaxed">{d.d}</div>
         </a>
       ))}
     </div>
   </div>
 </section>
 
-<!-- ════════ 结尾 CTA ════════ -->
-<section class="relative overflow-hidden">
-  <div class="blob w-[620px] h-[420px] top-[-60px] left-1/2 -translate-x-1/2" style="background:rgba(200,162,115,.1); animation-duration:14s,11s" aria-hidden="true"></div>
-  <div class="max-w-[720px] mx-auto px-7 py-24 text-center relative">
-    <h2 class="serif text-[clamp(28px,4vw,40px)] font-medium text-[#eceae5] leading-snug">夜还长，坐一会儿再走。</h2>
-    <p class="mt-5 text-[14.5px] text-[#807e88]">从最新一篇随笔读起，或者只是随便翻翻——这里没有 KPI。</p>
-    <div class="mt-9 flex items-center justify-center gap-4">
-      <a href="/posts" class="rounded-2xl px-8 py-3.5 text-[15px] font-medium text-[#1a1610] transition-transform hover:-translate-y-1"
-         style="background:var(--gold); box-shadow:0 0 28px rgba(200,162,115,.25)">从最新一篇读起</a>
-      <button id="calmBtn" class="glass !rounded-2xl px-6 py-3.5 text-[13px] text-[#807e88]" title="停止所有动效">静谧模式</button>
+<!-- ── 最近写的 ── -->
+{latest.length > 0 && (
+  <section class="relative overflow-hidden">
+    <div class="blob w-[380px] h-[300px] top-10 right-[-120px]" style="background:rgba(200,162,115,.07); animation-duration:15s,12s" aria-hidden="true"></div>
+    <div class="max-w-[1120px] mx-auto px-7 py-16 relative">
+      <div class="flex items-baseline gap-4 mb-8">
+        <span class="serif text-[20px] tracking-[.1em] text-[#eceae5]">最近写的</span>
+        <a href="/posts" class="mono text-[11px] tracking-[.14em] text-[#807e88] hover:text-[#c8a273] no-underline transition-colors">全部随笔 →</a>
+        <span class="flex-1 h-px" style="background:linear-gradient(90deg,#2a2a32,transparent)"></span>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {latest.map(p => (
+          <a href={`/posts/${p.id}`} class="glass p-7 no-underline text-[#c9c7c1] block">
+            <h3 class="serif text-[19px] font-medium text-[#eceae5] leading-relaxed mb-2">{p.data.title}</h3>
+            <div class="mono text-[12px] text-[#55535e] mb-3">{fmt(p.data.date)}</div>
+            <p class="text-[13.5px] text-[#807e88] leading-relaxed">{p.data.summary}</p>
+          </a>
+        ))}
+      </div>
     </div>
-  </div>
-</section>
-
-<script>
-  document.querySelectorAll('[data-heat]').forEach(grid => {
-    for (let i = 0; i < 7 * 26; i++) {
-      const el = document.createElement('i');
-      const r = Math.random();
-      if (r > 0.87) el.className = 'l4';
-      else if (r > 0.72) el.className = 'l3';
-      else if (r > 0.52) el.className = 'l2';
-      else if (r > 0.34) el.className = 'l1';
-      grid.appendChild(el);
-    }
-  });
-
-  const calmBtn = document.getElementById('calmBtn');
-  calmBtn?.addEventListener('click', () => {
-    document.body.classList.toggle('calm');
-    calmBtn.textContent = document.body.classList.contains('calm') ? '恢复动效' : '静谧模式';
-  });
-
-  (() => {
-    const steps = [...document.querySelectorAll<HTMLElement>('.tl-step')];
-    const yearEl = document.getElementById('tlYear');
-    const stageEl = document.getElementById('tlStage');
-    const dotsBox = document.getElementById('tlDots');
-    if (!steps.length || !dotsBox || !yearEl || !stageEl) return;
-    steps.forEach(() => dotsBox.appendChild(document.createElement('span')));
-    const dots = [...dotsBox.children];
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(en => {
-        if (!en.isIntersecting) return;
-        const t = en.target as HTMLElement;
-        const i = steps.indexOf(t);
-        steps.forEach((s, j) => s.classList.toggle('lit', j === i));
-        dots.forEach((d, j) => d.classList.toggle('on', j <= i));
-        yearEl.textContent = t.dataset.year ?? '';
-        stageEl.textContent = t.dataset.stage ?? '';
-      });
-    }, { rootMargin: '-42% 0px -42% 0px' });
-    steps.forEach(s => io.observe(s));
-  })();
-</script>
+  </section>
+)}
 
 </Base>

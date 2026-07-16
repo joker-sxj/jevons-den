@@ -1,5 +1,78 @@
 ---
-import RoomPlaceholder from '../components/RoomPlaceholder.astro';
+import Base from '../layouts/Base.astro';
+
+const projects = [
+  {
+    name: 'vibe-guard',
+    tag: '开源 · 自己的',
+    desc: '给用 AI 写代码、又不做人工 review 的团队装一个「守夜人」：把公共约定写进仓库，用 CI 守住，谁想偷偷改接口就亮红灯。',
+    link: 'https://github.com/joker-sxj/vibe-guard',
+    linkText: 'GitHub 仓库',
+  },
+  {
+    name: '密码测评智能体',
+    tag: '参与研发',
+    desc: '参与构建，把大模型的能力用到密码学评测这个专业场景——让 AI 智能体去做原本需要专家的评测工作。',
+  },
+  {
+    name: '网络安全主动防御系统',
+    tag: '本科 · 软件杯',
+    desc: '基于大语言模型智能体的网络安全主动防御系统，带队完成，拿了软件著作权。这是我 AI Agent 这条线的起点。',
+  },
+  {
+    name: '通用 Agent 平台',
+    tag: '初创 · 产品',
+    desc: '在一家西电孵化的 AI 初创公司，参与一个通用 Agent 平台。我更多是产品经理的角色——写 BP、剖析用户需求、给投资人讲故事。',
+  },
+];
 ---
-<RoomPlaceholder title="开发" seal="码" navKey="dev"
-  desc="精选项目、GitHub 贡献热力图，和 AI token 的燃烧记录——两种笔迹将在这里并排展开。" />
+<Base title="折腾过的 · Jevon's Den" active="dev">
+<section class="relative overflow-hidden">
+  <div class="blob w-[480px] h-[380px] -top-24 right-[6%]" style="background:rgba(200,162,115,.1)" aria-hidden="true"></div>
+
+  <div class="max-w-[900px] mx-auto px-7 pt-10 pb-24 relative">
+    <div class="mono text-[13px] text-[#c8a273] tracking-[.3em] mb-5">A THREAD SINCE 2023</div>
+    <h1 class="serif text-[clamp(28px,4vw,36px)] font-medium text-[#eceae5] leading-snug">
+      折腾过的东西，<br>基本都在一条 AI Agent 线上。
+    </h1>
+    <p class="mt-7 text-[15px] leading-[1.9] text-[#807e88] max-w-[34em]">
+      从本科的软件杯到现在，我一直在做同一件事的不同版本：让 AI 智能体学会自己思考、自己动手。
+    </p>
+
+    <!-- 项目卡 -->
+    <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-5">
+      {projects.map(p => (
+        <div class="glass lift p-7 flex flex-col">
+          <div class="flex items-baseline justify-between gap-3 mb-2">
+            <h3 class="serif text-[19px] font-medium text-[#eceae5]">{p.name}</h3>
+            <span class="mono text-[10px] text-[#c8a273] tracking-[.08em] flex-shrink-0">{p.tag}</span>
+          </div>
+          <p class="text-[13.5px] text-[#807e88] leading-[1.85] flex-1">{p.desc}</p>
+          {p.link && (
+            <a href={p.link} target="_blank" rel="noopener" class="mono text-[12px] text-[#807e88] hover:text-[#c8a273] transition-colors mt-4 no-underline">{p.linkText} →</a>
+          )}
+        </div>
+      ))}
+    </div>
+
+    <!-- 写字这件事 -->
+    <div class="mt-16">
+      <div class="flex items-baseline gap-4 mb-6">
+        <span class="serif text-[19px] tracking-[.1em] text-[#eceae5]">也爱写字</span>
+        <span class="mono text-[11px] tracking-[.2em] uppercase text-[#55535e]">Writing</span>
+        <span class="flex-1 h-px" style="background:linear-gradient(90deg,#2a2a32,transparent)"></span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <a href="https://blog.csdn.net/joker_sxj" target="_blank" rel="noopener" class="glass p-6 no-underline text-[#c9c7c1]">
+          <div class="text-[15px] text-[#eceae5] mb-1.5">CSDN 博客</div>
+          <div class="text-[13px] text-[#807e88] leading-relaxed">从大二写到现在，攒了十万多浏览量。学到的东西顺手讲给别人听。</div>
+        </a>
+        <a href="/posts" class="glass p-6 no-underline text-[#c9c7c1]">
+          <div class="text-[15px] text-[#eceae5] mb-1.5">这里的随笔</div>
+          <div class="text-[13px] text-[#807e88] leading-relaxed">技术之外的想法，写在自己的小站上，更自在一些。</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+</Base>

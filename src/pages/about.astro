@@ -1,54 +1,107 @@
 ---
 import Base from '../layouts/Base.astro';
 
-const milestones = [
-  { year: '2024', name: '校级优秀毕业设计', note: '一切的起点，第一次把作品做完' },
-  { year: '2025', name: '省级创新创业大赛 · 一等奖', note: '带着团队第一次站上省级领奖台' },
-  { year: '2026', name: 'vibe-guard 开源发布', note: '给所有 vibe coding 的团队装一个守夜人' },
+// AI Agent 主线：一条从大三追到现在的线
+const thread = [
+  { when: '起点', title: '一个网络安全的智能体', body: '本科做「中国软件杯」时，我带队做了「基于大语言模型智能体的网络安全主动防御系统」——让 AI 智能体自己去发现和应对攻击。那是我第一次感受到，原来可以让机器自己「想」和「做」，从此入了 Agent 的坑。' },
+  { when: '继续', title: '保研到西电，接着钻', body: '本科 GPA 排名第一，保研到西安电子科技大学计算机学院（软件工程专硕，国家特色化示范性软件学院联合培养）。方向依然围绕大模型与智能体。' },
+  { when: '参与', title: '密码测评智能体', body: '参与构建「密码测评智能体」，把大模型的能力用到密码学评测这个专业场景里——继续在「让 AI 干专业活」这条路上往深处走。' },
+  { when: '在做', title: '一家初创公司，多重身份', body: '这两个月线上加入了一家西电孵化的 AI 初创公司，做的是通用 Agent 平台。我更多是产品经理的角色，也扮演过合伙人。这段经历我单独写在下面。' },
+  { when: '业余', title: 'vibe-guard', body: '自己开源了 vibe-guard——给用 AI 写代码、又不做人工 review 的团队装一个「守夜人」，用 CI 守住公共约定。这个小站也是我业余折腾的东西之一。' },
 ];
+
+// 荣誉：低调，默认折叠
+const honors = {
+  荣誉: ['国家奖学金（全校前 0.2%）', '厦航奖学金（全校前 0.5%）', '优秀大学生 / 优秀大学生干部', 'GPA 4.19 · 专业排名 1/194'],
+  竞赛: ['中国软件杯全国赛', '中国高校计算机大赛天梯赛 · 国赛个人 & 团队三等奖', '蓝桥杯天津赛区二等奖', '互联网+ 天津赛区银奖', '挑战杯天津市一等奖', 'CCF-CSP 295 分（前 5%）'],
+  其他: ['软件著作权多项', '华为 HCIA 认证', 'CSDN 博客浏览量超十万'],
+};
 ---
-<Base title="关于 · Jevon's Den" active="">
+<Base title="关于我 · Jevon's Den" active="about">
 <section class="relative overflow-hidden">
-  <div class="blob w-[460px] h-[360px] -top-24 left-[10%]" style="background:rgba(200,162,115,.1)" aria-hidden="true"></div>
+  <div class="blob w-[480px] h-[380px] -top-24 left-[8%]" style="background:rgba(200,162,115,.1)" aria-hidden="true"></div>
 
-  <div class="max-w-[680px] mx-auto px-7 pt-10 pb-24 relative">
-    <h1 class="serif text-[32px] font-medium text-[#eceae5] tracking-[.06em]">关于</h1>
+  <div class="max-w-[720px] mx-auto px-7 pt-10 pb-24 relative">
+    <h1 class="serif text-[32px] font-medium text-[#eceae5] tracking-[.06em]">关于我</h1>
 
-    <div class="prose-den mt-10">
-      <p>你好，我是 Jevon。</p>
-      <p>白天带一支六个人的开发团队，晚上在这里写字、听歌、看电影。相信工具应该替人守规矩，而人应该把时间花在值得的事上——最近在做的 <a href="https://github.com/joker-sxj/vibe-guard" target="_blank" rel="noopener">vibe-guard</a> 就是这个信念的产物。</p>
-      <p>这间书房收留我的随笔、代码、唱片，和深夜看完的电影。没有更新频率承诺，没有 KPI，灯亮着，随时来。</p>
+    <div class="prose-den mt-8">
+      <p>你好，我是宋经纬，也可以叫我 Jevon。</p>
+      <p>计算机专业出身，本科在中国民航大学，现在保研在西安电子科技大学读软件工程。要用一句话概括我在忙什么，那就是：<strong>一直在跟 AI Agent 较劲</strong>——想办法让机器学会自己思考、自己动手干活。</p>
+      <p>但我不只是个埋头写代码的人。大学里我加入了话剧团，站上过舞台；我在 CSDN 写博客，攒了十万多的浏览量；我也喜欢听歌、看电影。理性和感性，我都想要。</p>
     </div>
 
+    <!-- AI 主线 -->
     <div class="mt-16">
       <div class="flex items-baseline gap-4 mb-8">
-        <span class="serif text-[19px] tracking-[.1em] text-[#eceae5]">获奖</span>
-        <span class="mono text-[11px] tracking-[.22em] uppercase text-[#55535e]">Honors</span>
+        <span class="serif text-[19px] tracking-[.1em] text-[#eceae5]">我和 AI Agent</span>
+        <span class="mono text-[11px] tracking-[.2em] uppercase text-[#55535e]">A Thread</span>
         <span class="flex-1 h-px" style="background:linear-gradient(90deg,#2a2a32,transparent)"></span>
       </div>
       <div class="space-y-4">
-        {milestones.map(m => (
-          <div class="glass lift px-6 py-4 flex items-baseline gap-5">
-            <span class="mono text-[13px] text-[#c8a273] flex-shrink-0">{m.year}</span>
-            <div>
-              <div class="text-[15px] text-[#eceae5]">{m.name}</div>
-              <div class="text-[13px] text-[#807e88] mt-0.5">{m.note}</div>
+        {thread.map(t => (
+          <div class="glass lift p-6">
+            <div class="flex items-baseline gap-3 mb-2">
+              <span class="mono text-[11px] text-[#c8a273] tracking-[.1em]">{t.when}</span>
+              <h3 class="text-[16px] text-[#eceae5]">{t.title}</h3>
             </div>
+            <p class="text-[13.5px] text-[#807e88] leading-[1.85]">{t.body}</p>
           </div>
         ))}
       </div>
     </div>
 
+    <!-- 初创那段：用户原话 -->
     <div class="mt-16">
       <div class="flex items-baseline gap-4 mb-8">
+        <span class="serif text-[19px] tracking-[.1em] text-[#eceae5]">在一家初创公司</span>
+        <span class="mono text-[11px] tracking-[.2em] uppercase text-[#55535e]">Startup</span>
+        <span class="flex-1 h-px" style="background:linear-gradient(90deg,#2a2a32,transparent)"></span>
+      </div>
+      <div class="glass p-8">
+        <div class="prose-den" style="max-width:none">
+          <p>这两个月线上加入了一家初创公司，说来也很惭愧，是在课堂上认识的师兄。所谓初创，意味着每个人随时面临着不同的问题，扮演着不同的角色。</p>
+          <p>两个月来我写过产品的 BP，部分参与产品开发、深度参与产品运维和用户管理，体验了推流，也扮演合伙人面见了几个投资人和意向合作伙伴。越来越觉得，在这个液态的时代，每个人的角色和分工都越来越模糊，这倒逼我学会很多「潜规则」：如何去打造好的产品、如何去吸引用户的使用和剖析用户的真实需求、如何去给投资人讲我们创业的故事、如何去在做事情的过程中寻找真实的自己……</p>
+          <p>我想做的、我想听的、我想说的、我想面临的、我想经历的，其实就跟我想参加一次黑客松一样，希望去尝试更不一样的东西。<strong>在行中求知，在知中求行，知行合一，方为本我。</strong></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 荣誉：低调折叠 -->
+    <div class="mt-16">
+      <div class="flex items-baseline gap-4 mb-6">
+        <span class="serif text-[19px] tracking-[.1em] text-[#eceae5]">一些奖状</span>
+        <span class="mono text-[11px] tracking-[.2em] uppercase text-[#55535e]">FYI</span>
+        <span class="flex-1 h-px" style="background:linear-gradient(90deg,#2a2a32,transparent)"></span>
+      </div>
+      <p class="text-[13px] text-[#807e88] mb-5 leading-relaxed">放在这儿不是为了炫耀，就是记录一下走过的路。想看的话点开看看。</p>
+      {Object.entries(honors).map(([group, items]) => (
+        <details class="glass mb-3 overflow-hidden group">
+          <summary class="px-6 py-4 cursor-pointer flex items-center justify-between text-[15px] text-[#eceae5] list-none select-none">
+            <span>{group}<span class="mono text-[12px] text-[#55535e] ml-3">{items.length} 项</span></span>
+            <span class="text-[#807e88] group-open:rotate-90 transition-transform">›</span>
+          </summary>
+          <div class="px-6 pb-5 pt-1 space-y-2">
+            {items.map(it => (
+              <div class="text-[13.5px] text-[#807e88] flex gap-2.5">
+                <span class="text-[#8a6f4e]">·</span><span>{it}</span>
+              </div>
+            ))}
+          </div>
+        </details>
+      ))}
+    </div>
+
+    <!-- 找到我 -->
+    <div class="mt-16">
+      <div class="flex items-baseline gap-4 mb-6">
         <span class="serif text-[19px] tracking-[.1em] text-[#eceae5]">找到我</span>
-        <span class="mono text-[11px] tracking-[.22em] uppercase text-[#55535e]">Contact</span>
+        <span class="mono text-[11px] tracking-[.2em] uppercase text-[#55535e]">Say Hi</span>
         <span class="flex-1 h-px" style="background:linear-gradient(90deg,#2a2a32,transparent)"></span>
       </div>
       <div class="flex flex-wrap gap-4">
         <a href="https://github.com/joker-sxj" target="_blank" rel="noopener" class="glass !rounded-2xl px-6 py-3 text-[14px] text-[#c9c7c1] no-underline">GitHub</a>
-        <a href="/articles" class="glass !rounded-2xl px-6 py-3 text-[14px] text-[#c9c7c1] no-underline">掘金 / CSDN</a>
-        <a href="/links" class="glass !rounded-2xl px-6 py-3 text-[14px] text-[#c9c7c1] no-underline">友邻们</a>
+        <a href="https://blog.csdn.net/joker_sxj" target="_blank" rel="noopener" class="glass !rounded-2xl px-6 py-3 text-[14px] text-[#c9c7c1] no-underline">CSDN 博客</a>
+        <a href="/stage" class="glass !rounded-2xl px-6 py-3 text-[14px] text-[#c9c7c1] no-underline">我的舞台</a>
       </div>
     </div>
   </div>
