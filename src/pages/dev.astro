@@ -11,8 +11,10 @@ const projects = [
   },
   {
     name: '密码测评智能体',
-    tag: '参与研发',
+    tag: '参与研发 · 玄知大模型',
     desc: '参与构建，把大模型的能力用到密码学评测这个专业场景——让 AI 智能体去做原本需要专家的评测工作。',
+    link: 'https://mp.weixin.qq.com/s/NQTLcVq5hHN2CCKi-tZ9rg',
+    linkText: '玄知大模型 V3.0 发布推文',
   },
   {
     name: '网络安全主动防御系统',
@@ -23,6 +25,48 @@ const projects = [
     name: '通用 Agent 平台',
     tag: '初创 · 产品',
     desc: '在一家西电孵化的 AI 初创公司，参与一个通用 Agent 平台。我更多是产品经理的角色——写 BP、剖析用户需求、给投资人讲故事。',
+    link: 'https://vip.gz.maxagent.top/home',
+    linkText: '平台入口',
+  },
+];
+
+// 精选博客链接卡（语雀风格）：真实标题 + 摘要 + 来源徽章
+const blogPicks = [
+  {
+    title: '什么是 Harness？',
+    excerpt: '探讨 Agent 系统里 Harness（操作系统层）与 Model（CPU 层）的协同：信息边界、工具系统、执行编排、记忆状态、评估观测、约束恢复六大层级如何构成闭环。',
+    tag: 'AI 工程',
+    link: 'https://blog.csdn.net/joker_sxj/article/details/160357955',
+  },
+  {
+    title: '一文解决大模型微调 + 部署 + RAG',
+    excerpt: '用 LLaMA-Factory 微调、Ollama 部署、RAGFlow 做检索增强，在 Windows 本地把大模型从训练到落地跑通的全流程实录。',
+    tag: '大模型实战',
+    link: 'https://blog.csdn.net/joker_sxj/article/details/147677780',
+  },
+  {
+    title: '论文阅读：DeepSeek-mHC',
+    excerpt: '读 DeepSeek 的 mHC：在仅增加 6.7% 开销的情况下缓解超连接的内存墙问题，并展示优势随模型规模扩展依然成立。',
+    tag: '论文笔记',
+    link: 'https://blog.csdn.net/joker_sxj/article/details/160357795',
+  },
+  {
+    title: '数据结构与算法——图',
+    excerpt: '图这一章的概念梳理，配上一批练习题和详细解析，本科打基础时留下的笔记。',
+    tag: '数据结构',
+    link: 'https://blog.csdn.net/joker_sxj/article/details/131617443',
+  },
+  {
+    title: '机器学习实验及学习经验',
+    excerpt: '跟着周志华《机器学习》做实验的记录，用 WEKA 动手复现，附带一路踩过的坑和心得。',
+    tag: '机器学习',
+    link: 'https://blog.csdn.net/joker_sxj/article/details/133974584',
+  },
+  {
+    title: '微机原理与接口技术复习题',
+    excerpt: '8086 中断类型号、中断向量表这些硬核概念的精选复习题，期末啃下来的笔记。',
+    tag: '课程复习',
+    link: 'https://blog.csdn.net/joker_sxj/article/details/137120550',
   },
 ];
 ---
@@ -55,23 +99,31 @@ const projects = [
       ))}
     </div>
 
-    <!-- 写字这件事 -->
+    <!-- 精选博客：语雀风格链接卡 -->
     <div class="mt-16">
       <div class="flex items-baseline gap-4 mb-6">
-        <span class="serif text-[19px] tracking-[.1em] text-[#eceae5]">也爱写字</span>
-        <span class="mono text-[11px] tracking-[.2em] uppercase text-[#55535e]">Writing</span>
+        <span class="serif text-[19px] tracking-[.1em] text-[#eceae5]">写过的一些</span>
+        <a href="https://blog.csdn.net/joker_sxj" target="_blank" rel="noopener" class="mono text-[11px] tracking-[.14em] text-[#807e88] hover:text-[#c8a273] no-underline transition-colors">CSDN 全部 · 十万+ 浏览 →</a>
         <span class="flex-1 h-px" style="background:linear-gradient(90deg,#2a2a32,transparent)"></span>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <a href="https://blog.csdn.net/joker_sxj" target="_blank" rel="noopener" class="glass p-6 no-underline text-[#c9c7c1]">
-          <div class="text-[15px] text-[#eceae5] mb-1.5">CSDN 博客</div>
-          <div class="text-[13px] text-[#807e88] leading-relaxed">从大二写到现在，攒了十万多浏览量。学到的东西顺手讲给别人听。</div>
-        </a>
-        <a href="/posts" class="glass p-6 no-underline text-[#c9c7c1]">
-          <div class="text-[15px] text-[#eceae5] mb-1.5">这里的随笔</div>
-          <div class="text-[13px] text-[#807e88] leading-relaxed">技术之外的想法，写在自己的小站上，更自在一些。</div>
-        </a>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {blogPicks.map(b => (
+          <a href={b.link} target="_blank" rel="noopener"
+             class="glass group p-5 no-underline text-[#c9c7c1] flex flex-col relative overflow-hidden">
+            <span class="absolute left-0 top-0 bottom-0 w-[3px]" style="background:var(--gold-dim)" aria-hidden="true"></span>
+            <div class="flex items-start justify-between gap-3 mb-2">
+              <h4 class="text-[15px] text-[#eceae5] leading-snug group-hover:text-[#c8a273] transition-colors">{b.title}</h4>
+              <span class="mono text-[10px] text-[#8a6f4e] tracking-[.06em] flex-shrink-0 mt-0.5">{b.tag}</span>
+            </div>
+            <p class="text-[12.5px] text-[#807e88] leading-[1.75] flex-1">{b.excerpt}</p>
+            <div class="mono text-[10px] text-[#55535e] mt-3.5 flex items-center gap-1.5">
+              <span class="w-3.5 h-3.5 rounded-[3px] inline-flex items-center justify-center text-[8px] font-bold" style="background:rgba(200,39,39,.18);color:#e07a7a" aria-hidden="true">C</span>
+              blog.csdn.net
+            </div>
+          </a>
+        ))}
       </div>
+      <p class="mt-5 text-[13px] text-[#807e88]">技术之外的想法在 <a href="/posts" class="text-[#c8a273] no-underline">这里的随笔</a> 里，更自在一些。</p>
     </div>
   </div>
 </section>
