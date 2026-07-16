@@ -1,32 +1,60 @@
 ---
 import Base from '../layouts/Base.astro';
 
-// 网易云真实收藏精选（2026-07 从「我的收藏」整理）
-// cover 渐变是占位氛围色，取自专辑封面主色调——不盗链封面图，版权干净
+// ── 唱片：网易云真实收藏精选，封面已下载到 /covers ──
 const albums = [
-  { title: 'The Dark Side of the Moon', artist: 'Pink Floyd', c: 'linear-gradient(135deg,#0d0d0d,#3d2a4d 60%,#7a4a2a)', note: '一切的起点，也是终点' },
-  { title: 'Wish You Were Here', artist: 'Pink Floyd', c: 'linear-gradient(150deg,#c9b8a0,#8a7a66)', note: '两个机器人握手，人却缺席' },
-  { title: 'The Wall', artist: 'Pink Floyd', c: 'linear-gradient(135deg,#e8e4dc,#b8b4ac)', note: '' },
-  { title: 'The Piper at the Gates of Dawn', artist: 'Pink Floyd', c: 'linear-gradient(140deg,#8a2a2a,#4a2a3d)', note: 'Syd 的迷幻童话' },
-  { title: 'In the Court of the Crimson King', artist: 'King Crimson', c: 'linear-gradient(135deg,#c94a3a,#7a2a4a)', note: '那张尖叫的脸' },
-  { title: 'Red', artist: 'King Crimson', c: 'linear-gradient(140deg,#1a1a1a,#5a1a1a)', note: '' },
-  { title: 'Close to the Edge', artist: 'Yes', c: 'linear-gradient(180deg,#8ab86a,#1a3d1a)', note: '前卫摇滚的天花板' },
-  { title: 'Abbey Road', artist: 'The Beatles', c: 'linear-gradient(140deg,#6a8ab8,#3d4a5a)', note: '' },
-  { title: 'Sgt. Pepper’s Lonely Hearts Club Band', artist: 'The Beatles', c: 'linear-gradient(135deg,#c9a83a,#8a3a3a)', note: '' },
-  { title: 'Electric Ladyland', artist: 'Jimi Hendrix', c: 'linear-gradient(135deg,#c93a2a,#7a1a1a)', note: '' },
-  { title: 'Led Zeppelin II', artist: 'Led Zeppelin', c: 'linear-gradient(140deg,#b8a87a,#5a4a2a)', note: '' },
-  { title: 'Use Your Illusion I & II', artist: 'Guns N’ Roses', c: 'linear-gradient(135deg,#3a5ac9,#c9a83a)', note: '' },
-  { title: '万能青年旅店（同名）', artist: '万能青年旅店', c: 'linear-gradient(140deg,#b8a878,#6a5a3a)', note: '杀死那个石家庄人' },
-  { title: '冀西南林路行', artist: '万能青年旅店', c: 'linear-gradient(135deg,#8a7a5a,#3d3527)', note: '泥河冲出山口，大地忽然辽阔' },
-  { title: '黑梦', artist: '窦唯', c: 'linear-gradient(160deg,#9a9a9a,#2a2a2a)', note: '中文摇滚最好的专辑，没有之一' },
-  { title: '卡拉OK·台北·我', artist: '张雨生', c: 'linear-gradient(135deg,#3a3a3a,#8a2a2a)', note: '被低估的天才' },
-  { title: '丑奴儿', artist: '草东没有派对', c: 'linear-gradient(150deg,#4a4a4a,#1a1a1a)', note: '' },
-  { title: '菊花夜行军', artist: '交工乐队', c: 'linear-gradient(135deg,#5aa83a,#2a3d8a)', note: '土地里长出来的音乐' },
-  { title: '华北浪革', artist: '刘森', c: 'linear-gradient(140deg,#2a3a8a,#1a1a3d)', note: '' },
-  { title: 'American Football (LP1)', artist: 'American Football', c: 'linear-gradient(160deg,#3d4a3d,#1a221a)', note: '那栋房子，那扇窗' },
-  { title: 'Interstellar OST', artist: 'Hans Zimmer', c: 'linear-gradient(140deg,#c9c9c9,#5a6a7a)', note: '管风琴一响，人类启程' },
-  { title: 'U87', artist: '陈奕迅', c: 'linear-gradient(135deg,#5a7a4a,#2a3d2a)', note: '' },
+  { img: 'dark-side', title: 'The Dark Side of the Moon', artist: 'Pink Floyd', note: '一切的起点，也是终点' },
+  { img: 'wish-you-were-here', title: 'Wish You Were Here', artist: 'Pink Floyd', note: '两个机器人握手，人却缺席' },
+  { img: 'the-wall', title: 'The Wall', artist: 'Pink Floyd', note: '' },
+  { img: 'piper-gates-dawn', title: 'The Piper at the Gates of Dawn', artist: 'Pink Floyd', note: 'Syd 的迷幻童话' },
+  { img: 'court-crimson-king', title: 'In the Court of the Crimson King', artist: 'King Crimson', note: '那张尖叫的脸' },
+  { img: 'red-king-crimson', title: 'Red', artist: 'King Crimson', note: '' },
+  { img: 'close-to-the-edge', title: 'Close to the Edge', artist: 'Yes', note: '前卫摇滚的天花板' },
+  { img: 'abbey-road', title: 'Abbey Road', artist: 'The Beatles', note: '' },
+  { img: 'sgt-pepper', title: 'Sgt. Pepper’s', artist: 'The Beatles', note: '' },
+  { img: 'electric-ladyland', title: 'Electric Ladyland', artist: 'Jimi Hendrix', note: '' },
+  { img: 'led-zeppelin-2', title: 'Led Zeppelin II', artist: 'Led Zeppelin', note: '' },
+  { img: 'interstellar-ost', title: 'Interstellar OST', artist: 'Hans Zimmer', note: '管风琴一响，人类启程' },
+  { img: 'omnipotent-youth', title: '万能青年旅店', artist: '万能青年旅店', note: '杀死那个石家庄人' },
+  { img: 'jixinan', title: '冀西南林路行', artist: '万能青年旅店', note: '泥河冲出山口，大地忽然辽阔' },
+  { img: 'black-dream', title: '黑梦', artist: '窦唯', note: '中文摇滚最好的专辑，没有之一' },
+  { img: 'karaoke-taipei', title: '卡拉OK·台北·我', artist: '张雨生', note: '被低估的天才' },
+  { img: 'wahe', title: '瓦合', artist: '草东没有派对', note: '' },
+  { img: 'night-march', title: '菊花夜行军', artist: '交工乐队', note: '土地里长出来的音乐' },
+  { img: 'huabei-langge', title: '华北浪革', artist: '刘森', note: '' },
+  { img: 'american-football', title: 'American Football', artist: 'American Football', note: '那栋房子，那扇窗' },
+  { img: 'u87', title: 'U87', artist: '陈奕迅', note: '' },
 ];
+
+// ── 电影：豆瓣「看过」73 部中的精选，评分短评来自我的豆瓣 ──
+const movies = [
+  { img: 'shawshank', title: '肖申克的救赎', stars: 5, quote: '' },
+  { img: 'farewell-concubine', title: '霸王别姬', stars: 5, quote: '为数不多的能把中国不太能谈论的题材都谈论一遍、又不低俗的片子' },
+  { img: 'brighter-summer', title: '牯岭街少年杀人事件', stars: 5, quote: '导演并非讲犯罪片，而是浓墨重彩地记录了少年的心路历程' },
+  { img: 'yiyi', title: '一一', stars: 5, quote: '' },
+  { img: 'to-live', title: '活着', stars: 5, quote: '这个时代太痛，痛到每个人的身上' },
+  { img: 'let-bullets-fly', title: '让子弹飞', stars: 5, quote: '申遗' },
+  { img: 'interstellar', title: '星际穿越', stars: 5, quote: 'STOP' },
+  { img: 'dark-knight', title: '蝙蝠侠：黑暗骑士', stars: 5, quote: '' },
+  { img: 'truman-show', title: '楚门的世界', stars: 5, quote: '' },
+  { img: 'budapest', title: '布达佩斯大饭店', stars: 5, quote: '好的作品是作者的艺术化表达' },
+  { img: 'schindler', title: '辛德勒的名单', stars: 5, quote: '有良心的商人，应该怎么称呼？' },
+  { img: 'rocky', title: '洛奇（全系列）', stars: 5, quote: '' },
+  { img: 'peaky-blinders', title: '浴血黑帮（全六季）', stars: 5, quote: 'By order of the Peaky fucking Blinders' },
+  { img: 'shameless', title: '无耻之徒（全九季）', stars: 5, quote: '' },
+];
+
+// ── 书：豆瓣「读过」，全五星 ──
+const books = [
+  { title: '悉达多', author: '赫尔曼·黑塞', c: 'linear-gradient(160deg,#8a6f4e,#3d3527)', quote: '黑塞仿佛把一卷诗揉碎了、剁烂了，再做成佳肴奉给读者' },
+  { title: '活着', author: '余华', c: 'linear-gradient(160deg,#5a3a2a,#2a1d17)', quote: '' },
+  { title: '许三观卖血记', author: '余华', c: 'linear-gradient(160deg,#7a3a3a,#3d1a1a)', quote: '' },
+  { title: '文城', author: '余华', c: 'linear-gradient(160deg,#4a5a6a,#222a33)', quote: '写尽余华的浪漫' },
+  { title: '三体（全集）', author: '刘慈欣', c: 'linear-gradient(160deg,#2a3d5a,#141a26)', quote: '电工刘牛逼' },
+  { title: '命运', author: '蔡崇达', c: 'linear-gradient(160deg,#5a6a4a,#262e1d)', quote: '' },
+];
+
+const star = (n: number) => '★'.repeat(n);
 ---
 <Base title="收藏 · Jevon's Den" active="media">
 <section class="relative overflow-hidden">
@@ -36,44 +64,87 @@ const albums = [
     <h1 class="serif text-[32px] font-medium text-[#eceae5] tracking-[.06em]">收藏</h1>
     <p class="mt-3 text-[14px] text-[#807e88] max-w-[34em] leading-relaxed">
       我的耳朵长在上个世纪——迷幻与前卫摇滚是主食，Pink Floyd 是本命；
-      也爱这片土地上长出来的声音，从窦唯到万青。
+      眼睛则交给杨德昌、姜文和诺兰。以下全部来自我的网易云和豆瓣，如假包换。
     </p>
 
-    <!-- 音乐 -->
+    <!-- ══ 唱片 ══ -->
     <div class="mt-12">
       <div class="flex items-baseline gap-4 mb-7">
         <span class="serif text-[19px] tracking-[.1em] text-[#eceae5]">唱片</span>
         <span class="mono text-[11px] tracking-[.2em] uppercase text-[#55535e]">On Rotation</span>
         <span class="flex-1 h-px" style="background:linear-gradient(90deg,#2a2a32,transparent)"></span>
       </div>
-
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+      <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
         {albums.map(a => (
           <div class="group relative">
-            <div class="aspect-square rounded-xl shadow-[0_8px_24px_rgba(0,0,0,.4)] flex items-end p-3 transition-transform group-hover:-translate-y-1.5"
-                 style={`background:${a.c}`}>
-              <div class="w-full">
-                <div class="text-[12.5px] font-medium text-white/90 leading-snug" style="text-shadow:0 1px 8px rgba(0,0,0,.6)">{a.title}</div>
-                <div class="text-[11px] text-white/60 mt-0.5" style="text-shadow:0 1px 6px rgba(0,0,0,.6)">{a.artist}</div>
-              </div>
+            <img src={`/covers/${a.img}.jpg`} alt={`${a.artist} – ${a.title}`}
+                 width="600" height="600" loading="lazy"
+                 class="aspect-square w-full object-cover rounded-lg shadow-[0_6px_20px_rgba(0,0,0,.45)] transition-transform group-hover:-translate-y-1.5" />
+            <div class="mt-2">
+              <div class="text-[12px] text-[#c9c7c1] leading-snug truncate">{a.title}</div>
+              <div class="text-[11px] text-[#55535e] truncate">{a.artist}</div>
             </div>
             {a.note && (
-              <div class="serif mt-2 text-[11.5px] text-[#807e88] leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity">
+              <div class="serif absolute inset-x-0 top-0 aspect-square rounded-lg bg-black/78 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-3 text-center text-[12px] leading-relaxed text-[#c8a273]">
                 「{a.note}」
               </div>
             )}
           </div>
         ))}
       </div>
-      <p class="serif mt-8 text-[12.5px] text-[#55535e]">色块取自每张专辑封面的气质——封面本身，请去唱片店亲眼看。</p>
     </div>
 
-    <!-- 电影与书：施工中 -->
-    <div class="mt-16 glass p-7">
-      <div class="serif text-[16px] text-[#eceae5] mb-2">电影与书</div>
-      <p class="text-[13.5px] text-[#807e88] leading-relaxed">
-        豆瓣上的观影和读书记录正在搬运中——很快这里会有海报墙和短评。
-      </p>
+    <!-- ══ 电影 ══ -->
+    <div class="mt-16">
+      <div class="flex items-baseline gap-4 mb-7">
+        <span class="serif text-[19px] tracking-[.1em] text-[#eceae5]">电影</span>
+        <span class="mono text-[11px] tracking-[.2em] uppercase text-[#55535e]">73 Watched</span>
+        <span class="flex-1 h-px" style="background:linear-gradient(90deg,#2a2a32,transparent)"></span>
+      </div>
+      <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-4">
+        {movies.map(m => (
+          <div class="group relative">
+            <img src={`/covers/movie-${m.img}.jpg`} alt={m.title}
+                 width="400" height="600" loading="lazy"
+                 class="aspect-[2/3] w-full object-cover rounded-lg shadow-[0_6px_20px_rgba(0,0,0,.45)] transition-transform group-hover:-translate-y-1.5" />
+            <div class="mt-2">
+              <div class="text-[12px] text-[#c9c7c1] leading-snug truncate">{m.title}</div>
+              <div class="text-[10px] tracking-[1.5px] text-[#c8a273]">{star(m.stars)}</div>
+            </div>
+            {m.quote && (
+              <div class="serif absolute inset-x-0 top-0 aspect-[2/3] rounded-lg bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-3 text-center text-[11.5px] leading-relaxed text-[#c8a273]">
+                「{m.quote}」
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      <p class="serif mt-6 text-[12.5px] text-[#55535e]">悬停海报可见我的豆瓣短评。杨德昌四部、诺兰五部、余华三本——品味已暴露无遗。</p>
+    </div>
+
+    <!-- ══ 书 ══ -->
+    <div class="mt-16">
+      <div class="flex items-baseline gap-4 mb-7">
+        <span class="serif text-[19px] tracking-[.1em] text-[#eceae5]">书</span>
+        <span class="mono text-[11px] tracking-[.2em] uppercase text-[#55535e]">All Five Stars</span>
+        <span class="flex-1 h-px" style="background:linear-gradient(90deg,#2a2a32,transparent)"></span>
+      </div>
+      <div class="grid grid-cols-3 sm:grid-cols-6 gap-4">
+        {books.map(b => (
+          <div class="group relative">
+            <div class="aspect-[3/4] rounded-lg shadow-[0_6px_20px_rgba(0,0,0,.45)] flex flex-col justify-between p-4 transition-transform group-hover:-translate-y-1.5"
+                 style={`background:${b.c}`}>
+              <div class="serif text-[15px] text-[#eceae5] leading-snug" style="writing-mode:vertical-rl; letter-spacing:.2em">{b.title}</div>
+              <div class="text-[10.5px] text-white/50">{b.author}</div>
+            </div>
+            {b.quote && (
+              <div class="serif absolute inset-0 rounded-lg bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-3 text-center text-[11.5px] leading-relaxed text-[#c8a273]">
+                「{b.quote}」
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   </div>
 </section>
