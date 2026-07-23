@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
 
 // ── 唱片：网易云真实收藏精选，封面已下载到 /covers ──
 const albums = [
@@ -69,8 +70,8 @@ const star = (n: number) => '★'.repeat(n);
 
     <!-- ══ 唱片 ══ -->
     <div class="mt-12">
-      <div class="flex items-baseline gap-4 mb-7">
-        <span class="serif text-[19px] tracking-[.1em] text-[#eceae5]">唱片</span>
+      <div class="reveal flex items-baseline gap-4 mb-7">
+        <span class="serif inline-flex items-center gap-2.5 text-[19px] tracking-[.1em] text-[#eceae5]"><span class="text-[#c8a273]"><Icon name="disc" size={17} /></span>唱片</span>
         <span class="mono text-[11px] tracking-[.2em] uppercase text-[#55535e]">On Rotation</span>
         <span class="flex-1 h-px" style="background:linear-gradient(90deg,#2a2a32,transparent)"></span>
       </div>
@@ -96,8 +97,8 @@ const star = (n: number) => '★'.repeat(n);
 
     <!-- ══ 电影 ══ -->
     <div class="mt-16">
-      <div class="flex items-baseline gap-4 mb-7">
-        <span class="serif text-[19px] tracking-[.1em] text-[#eceae5]">电影</span>
+      <div class="reveal flex items-baseline gap-4 mb-7">
+        <span class="serif inline-flex items-center gap-2.5 text-[19px] tracking-[.1em] text-[#eceae5]"><span class="text-[#c8a273]"><Icon name="clapperboard" size={17} /></span>电影</span>
         <span class="mono text-[11px] tracking-[.2em] uppercase text-[#55535e]">73 Watched</span>
         <span class="flex-1 h-px" style="background:linear-gradient(90deg,#2a2a32,transparent)"></span>
       </div>
@@ -124,8 +125,8 @@ const star = (n: number) => '★'.repeat(n);
 
     <!-- ══ 书 ══ -->
     <div class="mt-16">
-      <div class="flex items-baseline gap-4 mb-7">
-        <span class="serif text-[19px] tracking-[.1em] text-[#eceae5]">书</span>
+      <div class="reveal flex items-baseline gap-4 mb-7">
+        <span class="serif inline-flex items-center gap-2.5 text-[19px] tracking-[.1em] text-[#eceae5]"><span class="text-[#c8a273]"><Icon name="book-open" size={17} /></span>书</span>
         <span class="mono text-[11px] tracking-[.2em] uppercase text-[#55535e]">All Five Stars</span>
         <span class="flex-1 h-px" style="background:linear-gradient(90deg,#2a2a32,transparent)"></span>
       </div>

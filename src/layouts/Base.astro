@@ -1,4 +1,5 @@
 ---
+import Icon from '../components/Icon.astro';
 interface Props {
   title?: string;
   active?: string;
@@ -39,8 +40,8 @@ const nav = [
         <a
           href={n.href}
           class={active === n.key
-            ? 'text-[#eceae5]'
-            : 'text-[#807e88] hover:text-[#c8a273] transition-colors'}
+            ? 'nav-link text-[#eceae5]'
+            : 'nav-link text-[#807e88] hover:text-[#c8a273] transition-colors'}
         >{n.label}</a>
       ))}
     </nav>
@@ -51,9 +52,53 @@ const nav = [
   <footer class="border-t border-[#232329] relative z-10">
     <div class="max-w-[1120px] mx-auto px-7 py-9 flex flex-col md:flex-row justify-between items-center gap-3 text-[12.5px] text-[#55535e]">
       <div class="serif tracking-[.12em]">在行中求知，在知中求行。</div>
-      <div class="mono">© 2026 Jevon · <a class="text-[#807e88] hover:text-[#c8a273] transition-colors" href="https://github.com/joker-sxj" target="_blank" rel="noopener">GitHub</a> · <a class="text-[#807e88] hover:text-[#c8a273] transition-colors" href="/links">友邻</a></div>
+      <div class="mono flex items-center gap-2">© 2026 Jevon ·
+        <a class="inline-flex items-center gap-1 text-[#807e88] hover:text-[#c8a273] transition-colors" href="https://github.com/joker-sxj" target="_blank" rel="noopener"><Icon name="github" size={13} />GitHub</a> ·
+        <a class="text-[#807e88] hover:text-[#c8a273] transition-colors" href="/links">友邻</a>
+      </div>
     </div>
   </footer>
+
+  <div class="cur-dot" aria-hidden="true"></div>
+  <div class="cur-ring" aria-hidden="true"></div>
+
+  <script>
+    // ── 自定义光标：金点即时跟手，光环惯性追随 ──
+    const fine = matchMedia('(pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const dot = document.querySelector<HTMLElement>('.cur-dot');
+    const ring = document.querySelector<HTMLElement>('.cur-ring');
+    if (fine && dot && ring) {
+      document.documentElement.classList.add('has-cursor');
+      let mx = innerWidth / 2, my = innerHeight / 2, rx = mx, ry = my;
+      addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+      const loop = () => {
+        rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16;
+        dot.style.transform = `translate(${mx}px,${my}px)`;
+        ring.style.transform = `translate(${rx}px,${ry}px)`;
+        requestAnimationFrame(loop);
+      };
+      loop();
+      document.querySelectorAll('a, button, summary').forEach(el => {
+        el.addEventListener('mouseenter', () => ring.classList.add('hot'));
+        el.addEventListener('mouseleave', () => ring.classList.remove('hot'));
+      });
+    }
+
+    // ── 滚动显影 ──
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    }), { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // ── 磁性按钮 ──
+    if (fine) document.querySelectorAll<HTMLElement>('.magnet').forEach(el => {
+      el.addEventListener('mousemove', e => {
+        const r = el.getBoundingClientRect();
+        el.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * 0.18}px,${(e.clientY - r.top - r.height / 2) * 0.3}px)`;
+      });
+      el.addEventListener('mouseleave', () => { el.style.transform = ''; });
+    });
+  </script>
 </body>
 </html>
 

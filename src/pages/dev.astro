@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
 
 const projects = [
   {
@@ -85,15 +86,15 @@ const blogPicks = [
 
     <!-- 项目卡 -->
     <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-5">
-      {projects.map(p => (
-        <div class="glass lift p-7 flex flex-col">
+      {projects.map((p, i) => (
+        <div class="reveal glass lift p-7 flex flex-col" style={`--d:${i * 0.07}s`}>
           <div class="flex items-baseline justify-between gap-3 mb-2">
             <h3 class="serif text-[19px] font-medium text-[#eceae5]">{p.name}</h3>
             <span class="mono text-[10px] text-[#c8a273] tracking-[.08em] flex-shrink-0">{p.tag}</span>
           </div>
           <p class="text-[13.5px] text-[#807e88] leading-[1.85] flex-1">{p.desc}</p>
           {p.link && (
-            <a href={p.link} target="_blank" rel="noopener" class="mono text-[12px] text-[#807e88] hover:text-[#c8a273] transition-colors mt-4 no-underline">{p.linkText} →</a>
+            <a href={p.link} target="_blank" rel="noopener" class="mono inline-flex items-center gap-1 text-[12px] text-[#807e88] hover:text-[#c8a273] transition-colors mt-4 no-underline">{p.linkText} <Icon name="arrow-up-right" size={12} /></a>
           )}
         </div>
       ))}
@@ -103,7 +104,7 @@ const blogPicks = [
     <div class="mt-16">
       <div class="flex items-baseline gap-4 mb-6">
         <span class="serif text-[19px] tracking-[.1em] text-[#eceae5]">写过的一些</span>
-        <a href="https://blog.csdn.net/joker_sxj" target="_blank" rel="noopener" class="mono text-[11px] tracking-[.14em] text-[#807e88] hover:text-[#c8a273] no-underline transition-colors">CSDN 全部 · 十万+ 浏览 →</a>
+        <a href="https://blog.csdn.net/joker_sxj" target="_blank" rel="noopener" class="mono inline-flex items-center gap-1 text-[11px] tracking-[.14em] text-[#807e88] hover:text-[#c8a273] no-underline transition-colors">CSDN 全部 · 十万+ 浏览 <Icon name="arrow-up-right" size={11} /></a>
         <span class="flex-1 h-px" style="background:linear-gradient(90deg,#2a2a32,transparent)"></span>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

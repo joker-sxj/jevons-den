@@ -123,3 +123,71 @@ a.glass:hover, .lift:hover {
   .tl-step { opacity: 1; }
 }
 :focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; border-radius: 6px; }
+
+/* ═══ Awwwards 交互层 ═══ */
+
+/* 选区着色 */
+::selection { background: var(--gold); color: #1a1610; }
+
+/* ─── 自定义光标：金点 + 惯性环 ─── */
+html.has-cursor, html.has-cursor a, html.has-cursor button { cursor: none; }
+.cur-dot, .cur-ring {
+  position: fixed; top: 0; left: 0; z-index: 999; pointer-events: none;
+  border-radius: 50%; will-change: transform;
+}
+.cur-dot { width: 6px; height: 6px; background: var(--gold); margin: -3px 0 0 -3px; }
+.cur-ring {
+  width: 36px; height: 36px; margin: -18px 0 0 -18px;
+  border: 1px solid rgba(200,162,115,.45);
+  transition: width .28s cubic-bezier(.16,1,.3,1), height .28s cubic-bezier(.16,1,.3,1),
+              margin .28s cubic-bezier(.16,1,.3,1), border-color .28s, background .28s;
+}
+.cur-ring.hot {
+  width: 64px; height: 64px; margin: -32px 0 0 -32px;
+  border-color: var(--gold); background: rgba(200,162,115,.08);
+}
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .cur-dot, .cur-ring { display: none; }
+  html.has-cursor, html.has-cursor a, html.has-cursor button { cursor: auto; }
+}
+
+/* ─── 滚动显影 ─── */
+.reveal {
+  opacity: 0; transform: translateY(28px);
+  transition: opacity .8s ease, transform .8s cubic-bezier(.16,1,.3,1);
+  transition-delay: var(--d, 0s);
+}
+.reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+/* ─── 描边大字（实验版式）─── */
+.outline-text {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(236,234,229,.16);
+  user-select: none;
+}
+
+/* ─── 跑马灯丝带 ─── */
+.marquee { overflow: hidden; white-space: nowrap; }
+.marquee-track {
+  display: inline-flex; align-items: center; gap: 2.2rem;
+  padding-right: 2.2rem;
+  animation: marquee 26s linear infinite;
+  will-change: transform;
+}
+@keyframes marquee { to { transform: translateX(-50%); } }
+.calm .marquee-track { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+
+/* ─── 磁性按钮 ─── */
+.magnet { transition: transform .3s cubic-bezier(.16,1,.3,1); will-change: transform; }
+
+/* ─── 导航下划线生长 ─── */
+.nav-link { position: relative; }
+.nav-link::after {
+  content: ""; position: absolute; left: 0; bottom: -5px;
+  width: 100%; height: 1px; background: var(--gold);
+  transform: scaleX(0); transform-origin: right;
+  transition: transform .35s cubic-bezier(.16,1,.3,1);
+}
+.nav-link:hover::after { transform: scaleX(1); transform-origin: left; }

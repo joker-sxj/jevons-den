@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
 import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('posts', ({ data }) => !data.draft))
@@ -11,13 +12,15 @@ const fmt = (d: Date) =>
 
 // 低调的几个入口，不堆成绩
 const doors = [
-  { href: '/about', k: '关于我', d: '我是谁，一路怎么走过来的' },
-  { href: '/stage', k: '舞台', d: '写代码之外，我还上台演过话剧' },
-  { href: '/dev', k: '折腾过的', d: '一条从大三追到现在的 AI Agent 线' },
-  { href: '/posts', k: '随笔', d: '偶尔写点想法，多半不谈技术' },
-  { href: '/media', k: '收藏', d: '听的歌、看过的电影和书' },
-  { href: '/links', k: '友邻', d: '几个我常去的地方' },
+  { href: '/about', k: '关于我', d: '我是谁，一路怎么走过来的', icon: 'user' },
+  { href: '/stage', k: '舞台', d: '写代码之外，我还上台演过话剧', icon: 'mic' },
+  { href: '/dev', k: '折腾过的', d: '一条从大三追到现在的 AI Agent 线', icon: 'code' },
+  { href: '/posts', k: '随笔', d: '偶尔写点想法，多半不谈技术', icon: 'pen-line' },
+  { href: '/media', k: '收藏', d: '听的歌、看过的电影和书', icon: 'disc' },
+  { href: '/links', k: '友邻', d: '几个我常去的地方', icon: 'link' },
 ];
+
+const ribbon = ['记录', '代码', '舞台', '摇滚乐', '电影', '书', "JEVON'S DEN"];
 ---
 <Base active="home">
 
@@ -26,11 +29,14 @@ const doors = [
   <div class="blob w-[540px] h-[420px] -top-28 left-[6%]" style="background:rgba(200,162,115,.12)" aria-hidden="true"></div>
   <div class="blob w-[420px] h-[360px] top-32 right-[-100px]" style="background:rgba(107,86,55,.14); animation-duration:14s,11s" aria-hidden="true"></div>
 
+  <!-- 描边水印：实验版式层 -->
+  <div class="outline-text serif absolute -right-8 top-2 text-[clamp(120px,22vw,320px)] leading-none tracking-tight hidden md:block" aria-hidden="true">JEVON</div>
+
   <div class="max-w-[1120px] mx-auto px-7 relative">
-    <div class="pt-16 pb-20 max-w-[720px]">
+    <div class="pt-16 pb-24 max-w-[720px]">
       <div class="fiu mono text-[13px] text-[#c8a273] tracking-[.3em] mb-7" style="animation-delay:.05s">HI, I&#8217;M JEVON</div>
 
-      <h1 class="fiu font-medium text-[#eceae5] leading-[1.4] text-[clamp(30px,4.6vw,48px)]" style="animation-delay:.2s">
+      <h1 class="fiu font-medium text-[#eceae5] leading-[1.32] text-[clamp(32px,5.4vw,58px)]" style="animation-delay:.2s">
         嗨，我是 <span class="serif text-[#c8a273]">宋小经</span>。<br>
         一个喜欢记录、也演过话剧的<span class="serif">程序员</span>。
       </h1>
@@ -40,10 +46,10 @@ const doors = [
         我喜欢摇滚乐、喜欢艺术，热衷看电影、读书、写小记。很高兴认识你，很高兴你可以认识我～
       </p>
 
-      <div class="fiu mt-10 flex flex-wrap items-center gap-4" style="animation-delay:.5s">
-        <a href="/about" class="rounded-2xl px-7 py-3 text-[15px] font-medium text-[#1a1610] transition-transform hover:-translate-y-1"
-           style="background:var(--gold); box-shadow:0 0 24px rgba(200,162,115,.22)">认识我一下</a>
-        <a href="/stage" class="glass !rounded-2xl px-7 py-3 text-[15px] text-[#c9c7c1]">看我演话剧 →</a>
+      <div class="fiu mt-11 flex flex-wrap items-center gap-4" style="animation-delay:.5s">
+        <a href="/about" class="magnet inline-flex items-center gap-2 rounded-2xl px-7 py-3 text-[15px] font-medium text-[#1a1610]"
+           style="background:var(--gold); box-shadow:0 0 24px rgba(200,162,115,.22)">认识我一下 <Icon name="arrow-right" size={16} stroke={2.2} /></a>
+        <a href="/stage" class="magnet glass !rounded-2xl inline-flex items-center gap-2 px-7 py-3 text-[15px] text-[#c9c7c1]"><Icon name="mic" size={15} /> 看我演话剧</a>
       </div>
     </div>
   </div>
@@ -53,13 +59,35 @@ const doors = [
   </svg>
 </section>
 
+<!-- ── 跑马灯丝带 ── -->
+<section class="relative py-2" style="background:var(--bg-band)" aria-hidden="true">
+  <div class="marquee border-y border-[#232329] py-4">
+    <div class="marquee-track">
+      {[0, 1].map(() => (
+        ribbon.map(w => (
+          <>
+            <span class={w === "JEVON'S DEN" ? 'mono text-[15px] tracking-[.24em] text-[#55535e]' : 'serif text-[19px] tracking-[.14em] text-[#807e88]'}>{w}</span>
+            <span class="text-[#8a6f4e]"><Icon name="asterisk" size={13} /></span>
+          </>
+        ))
+      ))}
+    </div>
+  </div>
+</section>
+
 <!-- ── 几扇门 ── -->
 <section class="relative" style="background:var(--bg-band)">
   <div class="max-w-[1120px] mx-auto px-7 py-16">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-      {doors.map(d => (
-        <a href={d.href} class="glass p-6 no-underline text-[#c9c7c1]">
-          <div class="text-[16px] text-[#eceae5] mb-1.5">{d.k}</div>
+      {doors.map((d, i) => (
+        <a href={d.href} class="reveal glass group p-6 no-underline text-[#c9c7c1] relative" style={`--d:${i * 0.07}s`}>
+          <div class="flex items-center justify-between mb-4">
+            <span class="w-9 h-9 rounded-lg border border-[#8a6f4e]/60 text-[#c8a273] flex items-center justify-center"><Icon name={d.icon} size={16} /></span>
+            <span class="mono text-[10px] tracking-[.2em] text-[#55535e]">{String(i + 1).padStart(2, '0')}</span>
+          </div>
+          <div class="text-[16px] text-[#eceae5] mb-1.5 flex items-center gap-2">{d.k}
+            <span class="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-[#c8a273]"><Icon name="arrow-up-right" size={14} /></span>
+          </div>
           <div class="text-[13px] text-[#807e88] leading-relaxed">{d.d}</div>
         </a>
       ))}
@@ -72,14 +100,14 @@ const doors = [
   <section class="relative overflow-hidden">
     <div class="blob w-[380px] h-[300px] top-10 right-[-120px]" style="background:rgba(200,162,115,.07); animation-duration:15s,12s" aria-hidden="true"></div>
     <div class="max-w-[1120px] mx-auto px-7 py-16 relative">
-      <div class="flex items-baseline gap-4 mb-8">
+      <div class="reveal flex items-baseline gap-4 mb-8">
         <span class="serif text-[20px] tracking-[.1em] text-[#eceae5]">最近写的</span>
-        <a href="/posts" class="mono text-[11px] tracking-[.14em] text-[#807e88] hover:text-[#c8a273] no-underline transition-colors">全部随笔 →</a>
+        <a href="/posts" class="mono inline-flex items-center gap-1 text-[11px] tracking-[.14em] text-[#807e88] hover:text-[#c8a273] no-underline transition-colors">全部随笔 <Icon name="arrow-right" size={11} /></a>
         <span class="flex-1 h-px" style="background:linear-gradient(90deg,#2a2a32,transparent)"></span>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {latest.map(p => (
-          <a href={`/posts/${p.id}`} class="glass p-7 no-underline text-[#c9c7c1] block">
+        {latest.map((p, i) => (
+          <a href={`/posts/${p.id}`} class="reveal glass p-7 no-underline text-[#c9c7c1] block" style={`--d:${i * 0.09}s`}>
             <h3 class="serif text-[19px] font-medium text-[#eceae5] leading-relaxed mb-2">{p.data.title}</h3>
             <div class="mono text-[12px] text-[#55535e] mb-3">{fmt(p.data.date)}</div>
             <p class="text-[13.5px] text-[#807e88] leading-relaxed">{p.data.summary}</p>
