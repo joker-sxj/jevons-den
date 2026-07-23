@@ -21,6 +21,12 @@ const doors = [
 ];
 
 const ribbon = ['记录', '代码', '舞台', '摇滚乐', '电影', '书', "JEVON'S DEN"];
+
+// hero 逐字入场：预切分（保留原文案一字不改）
+let ci = 0;
+const seg = (t: string) => t.split('').map(c => ({ c: c === ' ' ? ' ' : c, i: ci++ }));
+const l1a = seg('嗨，我是 '), l1b = seg('宋小经'), l1c = seg('。');
+const l2a = seg('一个喜欢记录、也演过话剧的'), l2b = seg('程序员'), l2c = seg('。');
 ---
 <Base active="home">
 
@@ -36,9 +42,9 @@ const ribbon = ['记录', '代码', '舞台', '摇滚乐', '电影', '书', "JEV
     <div class="pt-16 pb-24 max-w-[720px]">
       <div class="fiu mono text-[13px] text-[#c8a273] tracking-[.3em] mb-7" style="animation-delay:.05s">HI, I&#8217;M JEVON</div>
 
-      <h1 class="fiu font-medium text-[#eceae5] leading-[1.32] text-[clamp(32px,5.4vw,58px)]" style="animation-delay:.2s">
-        嗨，我是 <span class="serif text-[#c8a273]">宋小经</span>。<br>
-        一个喜欢记录、也演过话剧的<span class="serif">程序员</span>。
+      <h1 class="font-medium text-[#eceae5] leading-[1.32] text-[clamp(32px,5.4vw,58px)]">
+        {l1a.map(x => <span class="char" style={`--i:${x.i}`}>{x.c}</span>)}<span class="serif text-[#c8a273]">{l1b.map(x => <span class="char" style={`--i:${x.i}`}>{x.c}</span>)}</span>{l1c.map(x => <span class="char" style={`--i:${x.i}`}>{x.c}</span>)}<br>
+        {l2a.map(x => <span class="char" style={`--i:${x.i}`}>{x.c}</span>)}<span class="serif">{l2b.map(x => <span class="char" style={`--i:${x.i}`}>{x.c}</span>)}</span>{l2c.map(x => <span class="char" style={`--i:${x.i}`}>{x.c}</span>)}
       </h1>
 
       <p class="fiu mt-8 text-[16px] leading-[1.9] text-[#807e88] max-w-[32em]" style="animation-delay:.35s">
